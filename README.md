@@ -1,1 +1,7 @@
 # MASTERBOOK
+node_modules
+.env
+.env.local
+.next
+out
+build
