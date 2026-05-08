@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MasterTrader — El Sistema Que Cambia Todo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96B;
+    --gold-dark: #9A7530;
+    --black: #0A0A08;
+    --dark: #111110;
+    --dark-mid: #1A1A17;
+    --dark-card: #1E1E1A;
+    --text: #F5F0E8;
+    --text-muted: #A09880;
+    --text-dim: #6B6455;
+    --green: #2ECC71;
+    --red: #E74C3C;
+    --border: rgba(201,168,76,0.2);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--black);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.2rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(10,10,8,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--text-muted); font-size: 0.85rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none; transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    padding: 0.6rem 1.5rem;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 4rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center;
+    max-width: 1200px; margin: 0 auto; width: 100%;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--border);
+    padding: 0.4rem 1rem;
+    margin-bottom: 2rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    padding: 1rem 2.5rem;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none; cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .btn-ghost {
+    padding: 1rem 2rem;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    border: none; cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    transition: color 0.3s;
+  }
+  .btn-ghost:hover { color: var(--text); }
+  .btn-ghost::before { content: '▶'; font-size: 0.6rem; }
+
+  .hero-stats {
+    display: flex; gap: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2.5rem;
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05em; }
+
+  /* BOOK MOCKUP */
+  .book-wrap {
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
+  }
+  .book {
+    width: 260px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
+    filter: drop-shadow(0 40px 60px rgba(0,0,0,0.8)) drop-shadow(0 0 40px rgba(201,168,76,0.15));
+    transition: transform 0.5s ease;
+  }
+  .book:hover {
+    transform: perspective(1000px) rotateY(-5deg) rotateX(2deg) translateY(-10px);
+  }
+  .book-cover {
+    width: 260px; height: 360px;
+    background: linear-gradient(135deg, #1a1610 0%, #2a2218 40%, #1a1610 100%);
+    border: 1px solid rgba(201,168,76,0.3);
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2rem;
+    text-align: center;
+  }
+  .book-cover::before {
+    content: '';
+    position: absolute; inset: 8px;
+    border: 1px solid rgba(201,168,76,0.15);
+    pointer-events: none;
+  }
+  .book-cover::after {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 20px;
+    background: linear-gradient(90deg, rgba(201,168,76,0.3) 0%, rgba(201,168,76,0.05) 100%);
+    border-right: 1px solid rgba(201,168,76,0.2);
+  }
+  .book-ornament {
+    font-size: 2.5rem; margin-bottom: 1rem;
+    color: var(--gold);
+    opacity: 0.8;
+  }
+  .book-title-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .book-sub-text {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .book-author {
+    position: absolute; bottom: 1.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .book-spine {
+    position: absolute; left: -12px; top: 0; bottom: 0;
+    width: 12px;
+    background: linear-gradient(180deg, #2a2218, #1a1610);
+    border: 1px solid rgba(201,168,76,0.2);
+    transform: rotateY(-90deg);
+    transform-origin: right center;
+  }
+  .book-badge {
+    position: absolute; top: -15px; right: -15px;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: var(--black);
+    font-weight: 700;
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.3;
+    box-shadow: 0 0 30px rgba(201,168,76,0.4);
+  }
+
+  /* TICKER */
+  .ticker {
+    background: var(--dark-mid);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0.8rem 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .ticker-inner {
+    display: flex; gap: 3rem;
+    animation: tickerScroll 20s linear infinite;
+    white-space: nowrap;
+    width: max-content;
+  }
+  @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ticker-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; }
+  .ticker-symbol { color: var(--text-muted); font-weight: 500; }
+  .ticker-val { color: var(--text); }
+  .up { color: var(--green); }
+  .down { color: var(--red); }
+
+  /* SECTIONS */
+  section { padding: 6rem 4rem; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+  .section-desc {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    max-width: 560px;
+  }
+
+  /* ABOUT BOOK */
+  #libro { background: var(--dark-mid); }
+  .book-features {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    margin-top: 4rem;
+    background: var(--border);
+  }
+  .book-feature {
+    background: var(--dark-card);
+    padding: 2.5rem;
+    transition: background 0.3s;
+  }
+  .book-feature:hover { background: #222218; }
+  .feature-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--border);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .feature-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+  .feature-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+
+  /* WHAT YOU'LL LEARN */
+  .learn-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+  .learn-item {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s;
+  }
+  .learn-item:hover { border-color: rgba(201,168,76,0.5); }
+  .learn-check {
+    width: 24px; height: 24px; min-width: 24px;
+    border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: 0.75rem;
+    margin-top: 2px;
+  }
+  .learn-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+  .learn-text strong { color: var(--text); font-weight: 500; display: block; margin-bottom: 0.25rem; }
+
+  /* COMPLEMENTOS */
+  #complementos { background: var(--dark-mid); }
+  .products-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .product-card {
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    position: relative;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .product-card:hover { border-color: rgba(201,168,76,0.5); transform: translateY(-4px); }
+  .product-card.featured {
+    border-color: var(--gold);
+  }
+  .product-featured-badge {
+    position: absolute; top: -1px; right: 2rem;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    font-weight: 500;
+  }
+  .product-icon {
+    width: 48px; height: 48px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    color: var(--gold);
+  }
+  .product-name {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .product-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; }
+  .product-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  .product-price span { font-size: 0.85rem; color: var(--text-muted); font-family: 'DM Sans', sans-serif; }
+  .product-includes { list-style: none; margin-bottom: 2rem; }
+  .product-includes li {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    padding: 0.35rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .product-includes li::before { content: '—'; color: var(--gold); font-size: 0.7rem; }
+  .btn-card {
+    width: 100%;
+    padding: 0.9rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+  }
+  .btn-card:hover, .product-card.featured .btn-card {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--black);
+  }
+
+  /* TESTIMONIALS */
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .testimonial {
+    padding: 2rem;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .testimonial::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    color: rgba(201,168,76,0.1);
+    position: absolute; top: -0.5rem; left: 1.5rem;
+    line-height: 1;
+  }
+  .testimonial-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .testimonial-author { display: flex; align-items: center; gap: 0.75rem; }
+  .author-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; color: var(--gold); font-weight: 500;
+  }
+  .author-name { font-size: 0.85rem; font-weight: 500; }
+  .author-role { font-size: 0.75rem; color: var(--text-dim); }
+  .stars { color: var(--gold); font-size: 0.75rem; margin-bottom: 1rem; letter-spacing: 2px; }
+
+  /* PRICING BUNDLE */
+  #precios { background: var(--dark-mid); }
+  .bundle-card {
+    max-width: 680px; margin: 3rem auto 0;
+    border: 1px solid var(--gold);
+    padding: 3rem;
+    text-align: center;
+    position: relative;
+  }
+  .bundle-card::before {
+    content: 'OFERTA ESPECIAL';
+    position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+    background: var(--dark-mid);
+    padding: 0 1rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+  }
+  .bundle-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .bundle-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem; }
+  .bundle-price-wrap { margin-bottom: 2rem; }
+  .bundle-original { font-size: 1.1rem; color: var(--text-dim); text-decoration: line-through; margin-bottom: 0.3rem; }
+  .bundle-price { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--gold); font-weight: 900; }
+  .bundle-price sup { font-size: 1.5rem; vertical-align: super; }
+  .bundle-save {
+    display: inline-block; margin-top: 0.5rem;
+    background: rgba(46,204,113,0.1); color: var(--green);
+    border: 1px solid rgba(46,204,113,0.3);
+    font-size: 0.75rem; letter-spacing: 0.1em;
+    padding: 0.3rem 0.75rem;
+  }
+  .bundle-includes {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.75rem; margin: 2rem 0;
+    text-align: left;
+  }
+  .bundle-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.85rem; color: var(--text-muted);
+  }
+  .bundle-item::before { content: '✓'; color: var(--gold); }
+  .btn-bundle {
+    display: block; width: 100%;
+    padding: 1.2rem;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none; cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s;
+    margin-bottom: 1rem;
+  }
+  .btn-bundle:hover { background: var(--gold-light); }
+  .bundle-guarantee { font-size: 0.78rem; color: var(--text-dim); }
+
+  /* FAQ */
+  .faq-list { margin-top: 3rem; max-width: 720px; }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .faq-question {
+    width: 100%; text-align: left;
+    padding: 1.5rem 0;
+    background: none; border: none; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .faq-toggle { color: var(--gold); font-size: 1.2rem; transition: transform 0.3s; flex-shrink: 0; }
+  .faq-item.open .faq-toggle { transform: rotate(45deg); }
+  .faq-answer {
+    max-height: 0; overflow: hidden;
+    font-size: 0.88rem; color: var(--text-muted);
+    line-height: 1.75;
+    transition: max-height 0.4s ease, padding 0.3s;
+  }
+  .faq-item.open .faq-answer { max-height: 200px; padding-bottom: 1.5rem; }
+
+  /* CTA FINAL */
+  .cta-final {
+    padding: 8rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-final::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
+  }
+  .cta-final-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .cta-final-title em { font-style: italic; color: var(--gold); }
+  .cta-final-sub {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 480px; margin: 0 auto 3rem;
+    line-height: 1.75;
+    position: relative;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 3rem 4rem;
+  }
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+  }
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a { font-size: 0.8rem; color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--text-muted); }
+  .footer-copy { font-size: 0.75rem; color: var(--text-dim); }
+
+  /* DIVIDER */
+  .gold-divider {
+    width: 60px; height: 1px; background: var(--gold);
+    margin: 1.5rem 0;
+    opacity: 0.5;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.85);
+    align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    padding: 3rem;
+    width: 100%; max-width: 480px;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    background: none; border: none; color: var(--text-dim);
+    font-size: 1.2rem; cursor: pointer;
+    transition: color 0.3s;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .modal-sub { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 2rem; }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label { display: block; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 0.85rem 1rem;
+    background: var(--dark-mid);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--gold); }
+  .form-group select { cursor: pointer; }
+  .form-group select option { background: var(--dark-card); }
+  .btn-submit {
+    width: 100%; padding: 1rem;
+    background: var(--gold);
+    color: var(--black);
+    border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.3s;
+    margin-top: 0.5rem;
+  }
+  .btn-submit:hover { background: var(--gold-light); }
+  .success-msg {
+    display: none; text-align: center; padding: 2rem 0;
+  }
+  .success-icon { font-size: 2.5rem; color: var(--gold); margin-bottom: 1rem; }
+  .success-msg h4 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.5rem; }
+  .success-msg p { font-size: 0.88rem; color: var(--text-muted); }
+
+  /* ANIMATIONS */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeInUp 0.8s ease forwards; }
+  .fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; animation-fill-mode: both; }
+  .fade-in-delay-2 { animation-delay: 0.25s; opacity: 0; animation-fill-mode: both; }
+  .fade-in-delay-3 { animation-delay: 0.4s; opacity: 0; animation-fill-mode: both; }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .book { transform: perspective(1000px) rotateY(-5deg) rotateX(2deg); }
+    section { padding: 4rem 1.5rem; }
+    .book-features { grid-template-columns: 1fr; }
+    .learn-grid { grid-template-columns: 1fr; }
+    .products-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .bundle-includes { grid-template-columns: 1fr; }
+    .cta-final { padding: 5rem 1.5rem; }
+    footer { padding: 2rem 1.5rem; }
+    .footer-inner { flex-direction: column; gap: 1.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">MasterTrader</div>
+  <ul class="nav-links">
+    <li><a href="#libro">El Libro</a></li>
+    <li><a href="#aprende">Contenido</a></li>
+    <li><a href="#complementos">Complementos</a></li>
+    <li><a href="#precios">Precios</a></li>
+  </ul>
+  <a href="#" class="nav-cta" onclick="openModal('bundle'); return false;">Comprar Ahora</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-grid">
+    <div>
+      <span class="hero-tag fade-in fade-in-delay-1">Edición Limitada 2025</span>
+      <h1 class="fade-in fade-in-delay-1">El Arte de <em>Operar</em><br>los Mercados</h1>
+      <p class="hero-sub fade-in fade-in-delay-2">
+        El sistema completo que transforma traders principiantes en operadores consistentes. Análisis técnico avanzado, gestión de riesgo y psicología del trading en un solo método.
+      </p>
+      <div class="hero-actions fade-in fade-in-delay-2">
+        <a href="#" class="btn-primary" onclick="openModal('libro'); return false;">Conseguir el Libro — 47€</a>
+        <a href="#aprende" class="btn-ghost">Ver contenido</a>
+      </div>
+      <div class="hero-stats fade-in fade-in-delay-3">
+        <div class="stat-item">
+          <div class="stat-num">+3.200</div>
+          <div class="stat-label">Traders Formados</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Valoración Media</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">340+</div>
+          <div class="stat-label">Páginas de Contenido</div>
+        </div>
+      </div>
+    </div>
+    <div class="book-wrap fade-in fade-in-delay-2">
+      <div class="book">
+        <div class="book-cover">
+          <div class="book-ornament">◈</div>
+          <div class="book-title-text">El Arte de Operar los Mercados</div>
+          <div class="book-sub-text" style="margin-top:0.5rem;">Sistema MasterTrader</div>
+          <div class="book-author">Carlos Vega · MasterTrader</div>
+        </div>
+        <div class="book-spine"></div>
+        <div class="book-badge">Best<br>Seller</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner" id="ticker">
+    <span class="ticker-item"><span class="ticker-symbol">BTC/USD</span><span class="ticker-val">$67.240</span><span class="up">+2.4%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">ETH/USD</span><span class="ticker-val">$3.820</span><span class="up">+1.8%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">SPX500</span><span class="ticker-val">5.287</span><span class="up">+0.6%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">EUR/USD</span><span class="ticker-val">1.0842</span><span class="down">-0.3%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">NASDAQ</span><span class="ticker-val">18.432</span><span class="up">+1.1%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">GOLD</span><span class="ticker-val">$2.312</span><span class="up">+0.9%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">OIL/WTI</span><span class="ticker-val">$82.10</span><span class="down">-0.7%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">APPLE</span><span class="ticker-val">$213</span><span class="up">+2.1%</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item"><span class="ticker-symbol">BTC/USD</span><span class="ticker-val">$67.240</span><span class="up">+2.4%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">ETH/USD</span><span class="ticker-val">$3.820</span><span class="up">+1.8%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">SPX500</span><span class="ticker-val">5.287</span><span class="up">+0.6%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">EUR/USD</span><span class="ticker-val">1.0842</span><span class="down">-0.3%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">NASDAQ</span><span class="ticker-val">18.432</span><span class="up">+1.1%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">GOLD</span><span class="ticker-val">$2.312</span><span class="up">+0.9%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">OIL/WTI</span><span class="ticker-val">$82.10</span><span class="down">-0.7%</span></span>
+    <span class="ticker-item"><span class="ticker-symbol">APPLE</span><span class="ticker-val">$213</span><span class="up">+2.1%</span></span>
+  </div>
+</div>
+
+<!-- ABOUT BOOK -->
+<section id="libro">
+  <div class="section-inner">
+    <span class="section-tag">El Libro</span>
+    <h2 class="section-title">No es solo un libro.<br>Es un <em>sistema completo</em>.</h2>
+    <div class="gold-divider"></div>
+    <p class="section-desc">
+      340 páginas de metodología probada en mercados reales. Sin teorías vacías, sin promesas irreales. Solo el sistema que funciona.
+    </p>
+    <div class="book-features">
+      <div class="book-feature">
+        <div class="feature-num">01</div>
+        <div class="feature-title">Análisis Técnico Avanzado</div>
+        <div class="feature-desc">Patrones de precio, estructura de mercado, zonas de liquidez y confluencias. Todo lo que necesitas para leer el mercado como los profesionales.</div>
+      </div>
+      <div class="book-feature">
+        <div class="feature-num">02</div>
+        <div class="feature-title">Gestión de Riesgo y Capital</div>
+        <div class="feature-desc">El sistema de sizing de posiciones, relación riesgo/beneficio y reglas de drawdown que protegen tu cuenta en cualquier condición de mercado.</div>
+      </div>
+      <div class="book-feature">
+        <div class="feature-num">03</div>
+        <div class="feature-title">Psicología del Trader</div>
+        <div class="feature-desc">Los sesgos cognitivos que destruyen traders rentables y el protocolo mental para operar con disciplina incluso bajo presión máxima.</div>
+      </div>
+      <div class="book-feature">
+        <div class="feature-num">04</div>
+        <div class="feature-title">Estrategias Operativas</div>
+        <div class="feature-desc">7 setups probados con reglas de entrada, salida y gestión. Backtest de más de 5 años en múltiples mercados incluido.</div>
+      </div>
+      <div class="book-feature">
+        <div class="feature-num">05</div>
+        <div class="feature-title">Plan de Trading</div>
+        <div class="feature-desc">Cómo construir y seguir un plan operativo personalizado. Incluye plantillas y ejemplos reales de diarios de trading.</div>
+      </div>
+      <div class="book-feature">
+        <div class="feature-num">06</div>
+        <div class="feature-title">Trading en Vivo</div>
+        <div class="feature-desc">Casos reales de operaciones documentadas con análisis detallado de cada decisión. Aprende de errores y aciertos documentados en tiempo real.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU'LL LEARN -->
+<section id="aprende" style="background: var(--dark-mid);">
+  <div class="section-inner">
+    <span class="section-tag">Contenido</span>
+    <h2 class="section-title">Lo que dominarás</h2>
+    <div class="gold-divider"></div>
+    <div class="learn-grid">
+      <div class="learn-item">
+        <div class="learn-check">✓</div>
+        <div class="learn-text"><strong>Estructura de mercado profesional</strong>Order flow, liquidez, zonas de oferta y demanda que usan los institucionales.</div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-check">✓</div>
+        <div class="learn-text"><strong>Sistemas de entrada de alta probabilidad</strong>Confluencias multi-temporales y filtros para seleccionar solo los mejores setups.</div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-check">✓</div>
+        <div class="learn-text"><strong>Gestión dinámica de posiciones</strong>Trailing stops, parciales estratégicos y cómo maximizar la relación R:R.</div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-check">✓</div>
+        <div class="learn-text"><strong>Construcción de un edge estadístico</strong>Backtesting, forward testing y métricas clave para validar cualquier estrategia.</div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-check">✓</div>
+        <div class="learn-text"><strong>Control emocional en el trading</strong>Rutinas pre-mercado, gestión del miedo y la codicia, y cómo mantener la ecuanimidad.</div>
+      </div>
+      <div class="learn-item">
+        <div class="learn-check">✓</div>
+        <div class="learn-text"><strong>Mercados aplicables</strong>Forex, índices, criptomonedas y acciones. El método es universal y adaptable.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLEMENTOS -->
+<section id="complementos">
+  <div class="section-inner">
+    <span class="section-tag">Complementos</span>
+    <h2 class="section-title">Acelera tu<br><em>curva de aprendizaje</em></h2>
+    <div class="gold-divider"></div>
+    <p class="section-desc">Herramientas diseñadas para sacar el máximo partido al libro y aplicar el sistema desde el primer día.</p>
+    <div class="products-grid">
+      <div class="product-card" onclick="openModal('curso')">
+        <div class="product-icon">🎬</div>
+        <div class="product-name">Videocurso Completo</div>
+        <div class="product-desc">60+ horas de formación en vídeo que complementan cada capítulo del libro. Análisis en vivo, ejemplos reales y sesiones de preguntas.</div>
+        <div class="product-price">197€ <span>acceso de por vida</span></div>
+        <ul class="product-includes">
+          <li>60+ horas de vídeo HD</li>
+          <li>Actualizaciones incluidas</li>
+          <li>Comunidad privada</li>
+          <li>Sesiones en vivo mensuales</li>
+        </ul>
+        <a href="#" class="btn-card" onclick="openModal('curso'); return false;">Añadir al Carrito</a>
+      </div>
+
+      <div class="product-card featured" onclick="openModal('bundle')">
+        <div class="product-featured-badge">Más Popular</div>
+        <div class="product-icon">⚡</div>
+        <div class="product-name">Pack Completo MasterTrader</div>
+        <div class="product-desc">Libro + Videocurso + Indicadores + Comunidad. Todo lo que necesitas para convertirte en un trader rentable en 90 días.</div>
+        <div class="product-price">297€ <span>todo incluido</span></div>
+        <ul class="product-includes">
+          <li>Libro físico + digital</li>
+          <li>Videocurso 60h</li>
+          <li>Pack de 12 indicadores</li>
+          <li>Comunidad VIP + mentoring</li>
+        </ul>
+        <a href="#" class="btn-card" onclick="openModal('bundle'); return false;">Consiguirlo Todo</a>
+      </div>
+
+      <div class="product-card" onclick="openModal('indicadores')">
+        <div class="product-icon">📊</div>
+        <div class="product-name">Pack de Indicadores</div>
+        <div class="product-desc">12 indicadores exclusivos para TradingView diseñados específicamente para el sistema MasterTrader. Instalación en 5 minutos.</div>
+        <div class="product-price">97€ <span>licencia permanente</span></div>
+        <ul class="product-includes">
+          <li>12 indicadores para TradingView</li>
+          <li>Scripts Pine personalizados</li>
+          <li>Alertas automáticas</li>
+          <li>Guía de configuración</li>
+        </ul>
+        <a href="#" class="btn-card" onclick="openModal('indicadores'); return false;">Añadir al Carrito</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section style="background: var(--dark-mid);">
+  <div class="section-inner">
+    <span class="section-tag">Testimonios</span>
+    <h2 class="section-title">Lo que dicen<br>nuestros <em>traders</em></h2>
+    <div class="gold-divider"></div>
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Llevaba 2 años perdiendo dinero en el trading. En 3 meses con el sistema MasterTrader empecé a ver resultados consistentes por primera vez. Este libro cambió completamente mi forma de operar.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">MR</div>
+          <div>
+            <div class="author-name">Miguel Rodríguez</div>
+            <div class="author-role">Trader retail · Madrid</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">El capítulo de gestión de riesgo solo ya vale el precio del libro. He reducido mi drawdown un 60% aplicando las reglas de sizing. Absolutamente recomendable para cualquier nivel.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">SP</div>
+          <div>
+            <div class="author-name">Sara Pérez</div>
+            <div class="author-role">Analista financiera · Barcelona</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">Compré el Pack Completo y no me arrepiento. Los indicadores son increíbles y la comunidad es muy activa. Nunca había tenido acceso a traders de este nivel de forma tan directa.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">JL</div>
+          <div>
+            <div class="author-name">Javier López</div>
+            <div class="author-role">Trader independiente · Valencia</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING BUNDLE -->
+<section id="precios">
+  <div class="section-inner">
+    <span class="section-tag">Precios</span>
+    <h2 class="section-title" style="text-align:center;">La inversión<br>más rentable de <em>tu vida</em></h2>
+    <div class="gold-divider" style="margin:1.5rem auto;"></div>
+    <div class="bundle-card">
+      <div class="bundle-title">Pack Completo MasterTrader</div>
+      <p class="bundle-desc">Todo lo que necesitas para dominar los mercados. Sin suscripciones, sin costes ocultos.</p>
+      <div class="bundle-price-wrap">
+        <div class="bundle-original">Valor total: 491€</div>
+        <div class="bundle-price"><sup>€</sup>297</div>
+        <div class="bundle-save">Ahorra 194€ — 40% de descuento</div>
+      </div>
+      <div class="bundle-includes">
+        <div class="bundle-item">Libro físico (tapa dura)</div>
+        <div class="bundle-item">Libro digital (PDF + ePub)</div>
+        <div class="bundle-item">Videocurso 60+ horas</div>
+        <div class="bundle-item">12 indicadores TradingView</div>
+        <div class="bundle-item">Acceso comunidad VIP</div>
+        <div class="bundle-item">Sesiones live mensuales</div>
+        <div class="bundle-item">Actualizaciones de por vida</div>
+        <div class="bundle-item">Soporte prioritario</div>
+      </div>
+      <a href="#" class="btn-bundle" onclick="openModal('bundle'); return false;">Quiero el Pack Completo →</a>
+      <p class="bundle-guarantee">🔒 Garantía de 30 días. Si no estás satisfecho, te devolvemos el dinero sin preguntas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background: var(--dark-mid);">
+  <div class="section-inner">
+    <span class="section-tag">FAQ</span>
+    <h2 class="section-title">Preguntas<br><em>frecuentes</em></h2>
+    <div class="gold-divider"></div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          ¿Necesito experiencia previa para aprovechar el libro?
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">No. El libro está estructurado de menos a más complejidad. Los primeros capítulos sientan las bases fundamentales del trading, por lo que tanto principiantes como traders con experiencia encontrarán valor desde la primera página.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          ¿En qué mercados funciona el sistema?
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">El sistema MasterTrader está diseñado para ser universal. Funciona en Forex, índices (SP500, Nasdaq, DAX), criptomonedas y acciones. Incluye ejemplos reales en todos estos mercados.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          ¿Cuánto capital necesito para empezar?
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">El sistema incluye un capítulo dedicado a gestión de capital para diferentes tamaños de cuenta. Puedes aplicar las mismas estrategias con 500€ o con 50.000€, adaptando el sizing a tu capital disponible.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          ¿Los indicadores funcionan con mi bróker?
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">Los indicadores son para TradingView (plataforma gratuita), que es compatible con prácticamente cualquier bróker del mundo. Solo necesitas una cuenta gratuita de TradingView para instalarlos.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          ¿Hay garantía de devolución?
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">Sí. Tienes 30 días desde tu compra para solicitar un reembolso completo si no estás satisfecho, sin necesidad de dar ninguna explicación. Tu dinero, tu confianza.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <h2 class="cta-final-title">¿Sigues esperando<br>el <em>momento perfecto?</em></h2>
+  <p class="cta-final-sub">El mejor momento para empezar fue ayer. El segundo mejor es ahora. Únete a más de 3.200 traders que ya están aplicando el sistema.</p>
+  <a href="#" class="btn-primary" onclick="openModal('bundle'); return false;">Empezar Hoy — Pack Completo 297€</a>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">MasterTrader</div>
+    <div class="footer-links">
+      <a href="#">Política de Privacidad</a>
+      <a href="#">Términos de Uso</a>
+      <a href="#">Aviso Legal</a>
+      <a href="#">Contacto</a>
+    </div>
+    <div class="footer-copy">© 2025 MasterTrader. Todos los derechos reservados.</div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-form-content">
+      <h3 id="modal-title">Finalizar Compra</h3>
+      <p class="modal-sub" id="modal-subtitle">Completa tus datos para procesar el pedido.</p>
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input type="text" placeholder="Carlos Vega" id="f-nombre">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="tu@email.com" id="f-email">
+      </div>
+      <div class="form-group">
+        <label>Producto</label>
+        <select id="f-producto">
+          <option value="libro">Libro — 47€</option>
+          <option value="curso">Videocurso — 197€</option>
+          <option value="indicadores">Pack Indicadores — 97€</option>
+          <option value="bundle">Pack Completo — 297€</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Método de pago</label>
+        <select id="f-pago">
+          <option>Tarjeta de crédito / débito</option>
+          <option>PayPal</option>
+          <option>Transferencia bancaria</option>
+          <option>Bizum</option>
+        </select>
+      </div>
+      <button class="btn-submit" onclick="submitOrder()">Confirmar Pedido →</button>
+    </div>
+    <div class="success-msg" id="modal-success">
+      <div class="success-icon">◈</div>
+      <h4>¡Pedido Recibido!</h4>
+      <p>Recibirás un email de confirmación en los próximos minutos con los detalles de acceso.<br><br>Bienvenido a MasterTrader.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal(product) {
+    const modal = document.getElementById('modal');
+    const select = document.getElementById('f-producto');
+    const title = document.getElementById('modal-title');
+    const sub = document.getElementById('modal-subtitle');
+    const formContent = document.getElementById('modal-form-content');
+    const success = document.getElementById('modal-success');
+    formContent.style.display = 'block';
+    success.style.display = 'none';
+    const map = {
+      libro: { val: 'libro', t: 'Conseguir el Libro', s: 'El Arte de Operar los Mercados — 47€' },
+      curso: { val: 'curso', t: 'Videocurso Completo', s: '60+ horas de formación — 197€' },
+      indicadores: { val: 'indicadores', t: 'Pack de Indicadores', s: '12 indicadores para TradingView — 97€' },
+      bundle: { val: 'bundle', t: 'Pack Completo MasterTrader', s: 'Todo incluido — 297€ (ahorras 194€)' }
+    };
+    if (map[product]) {
+      select.value = map[product].val;
+      title.textContent = map[product].t;
+      sub.textContent = map[product].s;
+    }
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById('modal')) closeModal();
+  }
+
+  function submitOrder() {
+    const nombre = document.getElementById('f-nombre').value;
+    const email = document.getElementById('f-email').value;
+    if (!nombre.trim() || !email.trim()) {
+      alert('Por favor completa nombre y email.');
+      return;
+    }
+    document.getElementById('modal-form-content').style.display = 'none';
+    document.getElementById('modal-success').style.display = 'block';
+  }
+
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>
